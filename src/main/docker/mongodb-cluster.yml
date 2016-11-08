@@ -1,0 +1,17 @@
+version: '2'
+services:
+    zarnes-mongodb:
+        container_name: zarnes-mongodb
+        image: mongo:3.3.12
+        ports:
+            - "27017:27017"
+        command: mongos --configdb zarnes-mongodb-config
+    zarnes-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    zarnes-mongodb-config:
+        image: mongo:mongo:3.3.12
+        container_name: zarnes-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
